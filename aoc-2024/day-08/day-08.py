@@ -1,5 +1,6 @@
 from collections import defaultdict
 from itertools import combinations
+from math import gcd
 
 grid = open(0).read().splitlines()
 
@@ -28,14 +29,19 @@ def solve(part):
                     antinodes.add((mx, my))
             if part:
                 #the antennas can also be considered antinodes
-                while m > x1 >= 0 <= y1 < n:
-                    antinodes.add((x1, y1))
-                    x1 -= dx
-                    y1 -= dy
-                while m > x2 >= 0 <= y2 < n:
-                    antinodes.add((x2, y2))
-                    x2 += dx
-                    y2 += dy
+                #dx, dy are divided by gcd to find minimum step length in each dir
+                div = gcd(dx, dy)
+                dx, dy = dx // div, dy // div
+                x, y = x1, y1
+                while m > x >= 0 <= y < n:
+                    antinodes.add((x, y))
+                    x -= dx
+                    y -= dy
+                x, y = x1, y1
+                while m > x >= 0 <= y < n:
+                    antinodes.add((x, y))
+                    x += dx
+                    y += dy
     return len(antinodes)
 
 print(f"Part 1: {solve(0)}")
